@@ -50,7 +50,7 @@ parser.add_argument('-v', '--verbose', dest='verbose', action='store_true',
 parser.add_argument('gitrepo', help='path to a Zuul git repository')
 args = parser.parse_args()
 
-logging.basicConfig()
+logging.basicConfig(stream=sys.stdout)
 log = logging.getLogger('zuul-clear-refs')
 if args.verbose:
     log.setLevel(logging.DEBUG)
