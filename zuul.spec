@@ -56,7 +56,7 @@ GoodData customized Zuul gatekeeper
 %attr(0755, root, root) %{install_dir}/tools
 
 %changelog
-* Thur Apr 15 2021 Hung Cao <hung.cao@gooddata.com> - 2.5.4
+* Thu Apr 15 2021 Hung Cao <hung.cao@gooddata.com> - 2.5.4
 - SETI-5687 Move the sleep after hooking to __dispatch_event()
 - Where it can be applied for all events instead of only the PR creating event
 
