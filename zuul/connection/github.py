@@ -65,6 +65,11 @@ class GithubWebhookListener():
             raise webob.exc.HTTPBadRequest(message)
 
         try:
+            # After github hook is sent, we need to wait for 2s for the cache
+            # in github is synced
+            # This would prevent 404 error when PR changed its state
+            sleep(2)
+            self.log.info("2s sleep for github ref is synced")
             event = method(request)
         except:
             self.log.exception('Exception when handling event:')
@@ -110,11 +115,6 @@ class GithubWebhookListener():
         action = body.get('action')
         pr_body = body.get('pull_request')
 
-        # After github hook is sent, we need to wait for 2s for the cache
-        # in github is synced
-        # This would prevent 404 error when PR changed its state
-        sleep(2)
-        self.log.info("2s sleep for github ref is synced")
         event = self._pull_request_to_event(pr_body)
         event.account = self._get_sender(body)
 
