@@ -11,5 +11,5 @@ testrepository>=0.0.17
 testtools>=0.9.32
 mock
 junitxml
-
+pbr
 Pillow<4.0.0
