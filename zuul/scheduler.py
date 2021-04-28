@@ -2253,8 +2253,8 @@ class DependentPipelineManager(BasePipelineManager):
             self.log.debug("  No changes needed")
             return True
         changes_needed = []
-        # Ignore supplied change_queue
-        with self.getChangeQueue(change) as change_queue:
+        # Ignore supplied change_queue - This is stupid
+        with self.getChangeQueue(change) as change_queue_new:
             for needed_change in change.needs_changes:
                 self.log.debug("  Change %s needs change %s:" % (
                     change, needed_change))
@@ -2262,7 +2262,7 @@ class DependentPipelineManager(BasePipelineManager):
                     self.log.debug("  Needed change is merged")
                     continue
                 with self.getChangeQueue(needed_change) as needed_change_queue:
-                    if needed_change_queue != change_queue:
+                    if needed_change_queue != change_queue_new:
                         self.log.debug("  Change %s in project %s does not "
                                        "share a change queue with %s "
                                        "in project %s" %
@@ -2273,7 +2273,7 @@ class DependentPipelineManager(BasePipelineManager):
                     self.log.debug("  Needed change is not the "
                                    "current patchset")
                     return False
-                if self.isChangeAlreadyInQueue(needed_change, change_queue):
+                if self.isChangeAlreadyInQueue(needed_change, change_queue_new):
                     self.log.debug("  Needed change is already ahead "
                                    "in the queue")
                     continue
