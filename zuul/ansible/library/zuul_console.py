@@ -142,11 +142,9 @@ class Server(object):
                     if console:
                         break
                     time.sleep(0.5)
-                while True:
-                    if self.followConsole(console, conn):
-                        break
-                    else:
-                        return
+                if not self.followConsole(console, conn):
+                    return
+
         finally:
             try:
                 conn.close()
