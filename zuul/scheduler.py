@@ -2075,7 +2075,7 @@ class IndependentPipelineManager(BasePipelineManager):
                 return False
         return True
 
-    def checkForChangesNeededBy(self, change, change_queue):
+    def checkForChangesNeededBy(self, change, change_queue=None):
         if self.pipeline.ignore_dependencies:
             return True
         self.log.debug("Checking for changes needed by %s:" % change)
