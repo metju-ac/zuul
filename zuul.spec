@@ -1,4 +1,5 @@
 %global install_dir /opt/gdc/zuul
+%global debug_package %{nil}
 %if 0%{?rhel} >= 8
 %global with_python3 1
 %endif
@@ -7,7 +8,7 @@ Name:             zuul
 Summary:          GoodData customized Zuul gatekeeper
 Epoch:            1
 Version:          2.5.4
-Release:          %{?gdcversion}%{?dist}.gdc
+Release:          %{?dist}.gdc
 
 Vendor:           GoodData
 Group:            GoodData/Tools
@@ -18,7 +19,14 @@ Source0:          sources.tar
 BuildArch:        x86_64
 BuildRoot:        %{_tmppath}/%{name}-%{version}-root
 
+AutoReqProv:      no
+
+%if 0%{?with_python3}
+Requires:         python3-virtualenv
+%else
 Requires:         python-virtualenv
+%endif
+
 BuildRequires:    git
 BuildRequires:    libffi-devel
 BuildRequires:    libjpeg-devel
@@ -33,9 +41,11 @@ BuildRequires:    python-virtualenv
 
 %prep
 %setup -q -c
+%py3_shebang_fix tools/*.py
+
 
 %build
-export PBR_VERSION="%{version}.%{release}"
+export PBR_VERSION="%{version}"
 make build
 
 %install
