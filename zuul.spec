@@ -41,8 +41,9 @@ BuildRequires:    python-virtualenv
 
 %prep
 %setup -q -c
+%if 0%{?with_python3}
 %py3_shebang_fix tools/*.py
-
+%endif
 
 %build
 export PBR_VERSION="%{version}"
