@@ -4,7 +4,12 @@ VENV_DIR := .venv
 VENV_ACTIVATE := . $(VENV_DIR)/bin/activate
 PWD := $(shell pwd)
 WEBAPP_DIR := etc/status
-
+IS_PYTHON3 ?= false
+ifeq ($(IS_PYTHON3),true)
+	PIP_REQ = requirements-py3.txt
+else
+	PIP_REQ = requirements.txt
+endif
 # Create source archive
 .PHONY: tarball
 tarball:
@@ -17,7 +22,7 @@ build: build.state
 build.state:
 	$(VIRTUALENV) $(VENV_DIR)
 	$(VENV_ACTIVATE) && pip install -U pip
-	$(VENV_ACTIVATE) && pip install -r requirements.txt
+	$(VENV_ACTIVATE) && pip install -r $(PIP_REQ)
 	$(VENV_ACTIVATE) && ./etc/status/fetch-dependencies.sh # web assets fetch
 	$(VENV_ACTIVATE) && python setup.py install
 	rm -f $(VENV_DIR)/pip-selfcheck.json

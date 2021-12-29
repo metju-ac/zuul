@@ -46,6 +46,9 @@ BuildRequires:    python-virtualenv
 
 %build
 export PBR_VERSION="%{version}"
+%if 0%{?with_python3}
+export IS_PYTHON3=true
+%endif
 make build
 
 %install
