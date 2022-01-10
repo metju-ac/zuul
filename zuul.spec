@@ -1,13 +1,13 @@
 %global install_dir /opt/gdc/zuul
 %global debug_package %{nil}
 %if 0%{?rhel} >= 8
-%global with_python3 1
+%global with_python3 0
 %endif
 
 Name:             zuul
 Summary:          GoodData customized Zuul gatekeeper
 Epoch:            1
-Version:          2.5.4
+Version:          2.5.5
 Release:          %{?gdcversion}%{?dist}.gdc
 
 Vendor:           GoodData
@@ -24,7 +24,7 @@ AutoReqProv:      no
 %if 0%{?with_python3}
 Requires:         python3-virtualenv
 %else
-Requires:         python-virtualenv
+Requires:         python2-virtualenv
 %endif
 
 BuildRequires:    git
@@ -35,8 +35,8 @@ BuildRequires:    openssl-devel
 BuildRequires:    python3-pip
 BuildRequires:    python3-virtualenv
 %else
-BuildRequires:    python-pip
-BuildRequires:    python-virtualenv
+BuildRequires:    python2-pip
+BuildRequires:    python2-virtualenv
 %endif
 
 %prep
@@ -49,6 +49,8 @@ BuildRequires:    python-virtualenv
 export PBR_VERSION="%{version}"
 %if 0%{?with_python3}
 export IS_PYTHON3=true
+%else
+export VIRTUALENV=/usr/bin/virtualenv-2
 %endif
 make build
 
