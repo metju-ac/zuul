@@ -1,7 +1,7 @@
 %global install_dir /opt/gdc/zuul
 %global debug_package %{nil}
-%if 0%{?rhel} >= 8
-%global with_python3 0
+%if 0%{?rhel} >= 9
+%global with_python3 1
 %endif
 
 Name:             zuul
@@ -34,6 +34,8 @@ BuildRequires:    openssl-devel
 %if 0%{?with_python3}
 BuildRequires:    python3-pip
 BuildRequires:    python3-virtualenv
+BuildRequires:    python3-rpm-macros
+BuildRequires:    python3-devel
 %else
 BuildRequires:    python2-pip
 BuildRequires:    python2-virtualenv
@@ -52,12 +54,20 @@ export IS_PYTHON3=true
 %else
 export VIRTUALENV=/usr/bin/virtualenv-2
 %endif
+%if 0%{?rhel} >= 9
+sed -i '/relocatable/d' Makefile
+%endif
 make build
 
 %install
 rm -fr $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT%{install_dir} install
 cp -r tools %{buildroot}%{install_dir}/
+
+# Bloody hack to get at least zuul-cloner working on el9
+%if 0%{?rhel} >= 9
+cp zuul-cloner.py.el9 %{buildroot}%{install_dir}/bin/zuul-cloner
+%endif
 
 # %check
 # export PBR_VERSION="%{version}.%{release}"
@@ -70,14 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 GoodData customized Zuul gatekeeper
 
 %files
-%attr(0755, root, root) %dir %{install_dir}
-%attr(0755, root, root) %{install_dir}/bin
-%attr(0755, root, root) %{install_dir}/include
-%attr(0755, root, root) %{install_dir}/lib
-%attr(0755, root, root) %{install_dir}/lib64
-%attr(0755, root, root) %{install_dir}/status
-%attr(0755, root, root) %{install_dir}/share
-%attr(0755, root, root) %{install_dir}/tools
+%attr(0755, root, root) %{install_dir}
 
 %changelog
 * Thu Apr 15 2021 Hung Cao <hung.cao@gooddata.com> - 2.5.4
